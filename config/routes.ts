@@ -16,6 +16,7 @@ export default [
     ],
   },
   { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },
+  { name: '任务管理', icon: 'table', path: '/task', component: './Task' },
   { path: '/', redirect: '/welcome' },
   { path: '*', layout: false, component: './404' },
 ];
