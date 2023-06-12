@@ -1,7 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
-import { API_Task } from "@/pages/Task/typings";
 
 // 获取任务列表
 export async function task(params: API_Task.taskParams, options?: { [key: string]: any }) {
@@ -24,7 +23,7 @@ export async function addTask(body: API_Task.taskListItemAdd, options?: { [key: 
     params.append('port', body.port);
   }
   params.append('status', body.status);
-  params.append('pcapFile', body.pcapFile);
+  params.append('pcapFile', body.pcap_file);
   return request<API_Task.taskListItemAdd>('/myapi/task/createTask', {
     method: 'POST',
     data: params,
@@ -41,19 +40,19 @@ export async function updateTask(body: API_Task.taskListItemUpdate, options?: { 
     params.append('port', body.port);
   }
   params.append('pcapFile', body.pcapFile);
-  return request<API.SpringBoot3ListItem>('/myapi/task/updateTask', {
+  return request<API_Task.taskListItemUpdate>('/myapi/task/updateTask', {
     method: 'POST',
     data: params,
     ...(options || {}),
   });
 }
 
-
-
 // 删除任务
-export async function removeTask(body: API_Task.taskListItemDelete, options?: { [key: string]: any }) {
+export async function removeTask(body: API_Task.taskListItemKeys, options?: { [key: string]: any }) {
   let params = new FormData();
-  params.append('taskId', body.taskId)
+  body.taskIds.forEach((taskId) => {
+    params.append('taskId', taskId);
+  });
   return request<Record<string, any>>('/myapi/task/deleteTask', {
     method: 'POST',
     data: params,
@@ -62,10 +61,11 @@ export async function removeTask(body: API_Task.taskListItemDelete, options?: { 
 }
 
 // 开始任务
-export async function startTask(body: API_Task.taskListItemStart, options?: { [key: string]: any }) {
+export async function startTask(body: API_Task.taskListItemKeys, options?: { [key: string]: any }) {
   let params = new FormData();
-  params.append('taskId', body.taskId)
-  debugger;
+  body.taskIds.forEach((taskId) => {
+    params.append('taskId', taskId);
+  });
   return request<Record<string, any>>('/myapi/task/startTask', {
     method: 'POST',
     data: params,

@@ -216,9 +216,7 @@ const TableList: React.FC = () => {
         request={rule}
         columns={columns}
         rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
+          onChange: (_, selectedRows) => console.log(selectedRows),
         }}
       />
       {selectedRowsState?.length > 0 && (

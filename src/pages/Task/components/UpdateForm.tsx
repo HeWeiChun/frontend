@@ -1,6 +1,9 @@
 import {
-  ProForm, ProFormDependency, ProFormRadio,
-  ProFormText, ProFormUploadButton,
+  ProForm,
+  ProFormDependency,
+  ProFormRadio,
+  ProFormText,
+  ProFormUploadButton,
 } from '@ant-design/pro-components';
 import {Modal} from 'antd';
 import React from 'react';
@@ -16,7 +19,7 @@ export type UpdateFormProps = {
   onCancel: (flag?: boolean, formVals?: UpdateFormValueType) => void;
   onSubmit: (values: UpdateFormValueType) => Promise<void>;
   updateModalOpen: boolean;
-  values: UpdateFormValueType
+  values: API_Task.taskListItem
 };
 
 const UpdateForm: React.FC<UpdateFormProps> = (props) => {

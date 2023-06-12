@@ -19,7 +19,6 @@ export type AddFormProps = {
   onCancel: (flag?: boolean, formVals?: AddFormValueType) => void;
   onSubmit: (values: AddFormValueType) => Promise<void>;
   addModalOpen: boolean;
-  values: AddFormValueType;
 };
 
 const AddForm: React.FC<AddFormProps> = (props) => {
@@ -49,6 +48,12 @@ const AddForm: React.FC<AddFormProps> = (props) => {
             {
               label: '在线',
               value: 1,
+            },
+          ]}
+          rules={[
+            {
+              required: true,
+              message: "请选择任务类型"
             },
           ]}
         />
@@ -81,7 +86,7 @@ const AddForm: React.FC<AddFormProps> = (props) => {
                   rules={[
                     {
                       required: true,
-                      message: "请选择端口"
+                      message: "请输入端口号"
                     },
                   ]}
                 />

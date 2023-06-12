@@ -1,19 +1,19 @@
-import { task, addTask, updateTask, removeTask, startTask } from './service';
-import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
+import {task, addTask, updateTask, removeTask, startTask} from '@/pages/Task/service';
+import {PlusOutlined} from '@ant-design/icons';
+import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
   PageContainer,
   ProDescriptions,
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, Drawer, message } from 'antd';
-import React, { useRef, useState } from 'react';
-import type { UpdateFormValueType } from './components/UpdateForm';
-import type { AddFormValueType } from './components/AddForm';
-import UpdateForm from './components/UpdateForm';
-import AddForm from './components/AddForm';
-import { v4 as uuidv4 } from 'uuid';
+import {Button, Drawer, message, Space} from 'antd';
+import React, {useEffect, useRef, useState} from 'react';
+import type {UpdateFormValueType} from '@/pages/Task/components/UpdateForm';
+import type {AddFormValueType} from '@/pages/Task/components/AddForm';
+import UpdateForm from '@/pages/Task/components/UpdateForm';
+import AddForm from '@/pages/Task/components/AddForm';
+import {v4 as uuidv4} from 'uuid';
 import moment from 'moment';
 
 // 创建任务
@@ -30,7 +30,7 @@ const handleAdd = async (fields: AddFormValueType) => {
       mode: fields.mode,
       port: fields.port,
       status: 0,
-      pcapFile: file,
+      pcap_file: file,
     });
     hide();
     message.success('成功创建任务');
@@ -46,7 +46,7 @@ const handleAdd = async (fields: AddFormValueType) => {
 const handleUpdate = async (fields: UpdateFormValueType) => {
   const hide = message.loading('正在更新');
   let file;
-  if (fields.pcapFile) {
+  if (fields.pcapFile && fields.pcapFile.length > 0) {
     file = fields.pcapFile[0].originFileObj;
   } else file = null;
   try {
@@ -66,47 +66,78 @@ const handleUpdate = async (fields: UpdateFormValueType) => {
   }
 };
 
-// 删除节点
-const handleRemove = async (taskId: string) => {
+
+// 批量删除
+const handleRemove = async (selectedRows: API_Task.taskListItem[]) => {
   const hide = message.loading('正在删除');
+  if (!selectedRows) return true;
   try {
+    const startableRows = selectedRows.filter((row) => [0, 3, 100].includes(row.status));
+    if (startableRows.length === 0) {
+      hide();
+      message.error('选中的任务中没有可删除的任务');
+      return false;
+    }
     await removeTask({
-      taskId: taskId,
+      taskIds: startableRows.map((row) => row.taskId),
     });
     hide();
     message.success('删除成功');
     return true;
   } catch (error) {
     hide();
-    message.error('删除失败');
+    message.error('删除失败, 请重试');
     return false;
   }
 };
-//开始任务
-const handleStart = async (taskId: string) => {
+
+// 批量开始
+const handleStart = async (selectedRows: API_Task.taskListItem[]) => {
   const hide = message.loading('正在启动');
+  if (!selectedRows) return true;
   try {
+    const startableRows = selectedRows.filter((row) => [0, 3, 100].includes(row.status));
+    if (startableRows.length === 0) {
+      hide();
+      message.error('选中的任务中没有可启动的任务');
+      return false;
+    }
     await startTask({
-      taskId: taskId,
+      taskIds: startableRows.map((row) => row.taskId),
     });
     hide();
     message.success('启动成功');
     return true;
   } catch (error) {
     hide();
-    message.error('启动失败');
+    message.error('启动失败, 请重试');
     return false;
   }
 };
+
 const TableList: React.FC = () => {
   // 新建窗口的弹窗
   const [createModalOpen, handleModalOpen] = useState<boolean>(false);
-  // 分布更新窗口的弹窗
+  // 更新窗口的弹窗
   const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API_Task.taskListItem>();
   const [selectedRowsState, setSelectedRows] = useState<API_Task.taskListItem[]>([]);
+  const [autoReload, setAutoReload] = useState<boolean>(true);
+
+  // 自动刷新数据
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (actionRef.current && autoReload) {
+        actionRef.current.reload();
+      }
+    }, 1000); // 每隔 1 秒刷新一次
+
+    return () => clearInterval(timer);
+  }, [autoReload]);
+
+
   const columns: ProColumns<API_Task.taskListItem>[] = [
     {
       title: '任务ID',
@@ -161,6 +192,7 @@ const TableList: React.FC = () => {
       title: '正常流量数',
       dataIndex: 'normal',
       valueType: 'textarea',
+      hideInTable: true,
     },
     {
       title: '异常流量数',
@@ -206,6 +238,7 @@ const TableList: React.FC = () => {
         const canModify = record.status === 0 || record.status === 100;
         const canRestart = record.status === 3 || record.status === 100;
         const canStart: boolean = record.status === 0;
+        const canDelete: boolean = record.status === 0 || record.status === 3 || record.status === 100;
         return [
           canModify && (
             <a
@@ -222,10 +255,11 @@ const TableList: React.FC = () => {
             <a
               key="restartTask"
               onClick={async () => {
-                await handleStart(record.taskId);
+                await handleStart([record]);
                 setCurrentRow(record);
                 if (actionRef.current) {
                   actionRef.current.reload();
+                  setAutoReload(true);
                 } else {
                   message.error('任务已经启动');
                 }
@@ -238,16 +272,33 @@ const TableList: React.FC = () => {
             <a
               key="startTask"
               onClick={async () => {
-                await handleStart(record.taskId);
+                await handleStart([record]);
                 setCurrentRow(record);
                 if (actionRef.current) {
                   actionRef.current.reload();
+                  setAutoReload(true);
                 } else {
                   message.error('任务已经启动');
                 }
               }}
             >
               开始任务
+            </a>
+          ),
+          canDelete && (
+            <a
+              key="deleteTask"
+              onClick={async () => {
+                await handleRemove([record]);
+                setCurrentRow(undefined);
+                if (actionRef.current) {
+                  actionRef.current.reload();
+                } else {
+                  message.error('任务已经删除');
+                }
+              }}
+            >
+              删除任务
             </a>
           )
         ];
@@ -259,7 +310,7 @@ const TableList: React.FC = () => {
       <ProTable<API_Task.taskListItem, API.PageParams>
         headerTitle="任务列表"
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="taskId"
         search={false}
         toolBarRender={() => [
           <Button
@@ -269,12 +320,84 @@ const TableList: React.FC = () => {
               handleModalOpen(true);
             }}
           >
-            <PlusOutlined /> 新建
+            <PlusOutlined/> 新建
           </Button>,
         ]}
-        request={task}
+
+        request={async (params: {
+                          pageSize?: number;
+                          current?: number;
+                        },) => {
+          const msg = await task({
+            current: params.current,
+            pageSize: params.pageSize,
+          });
+          if (msg.success && msg.data) {
+            setAutoReload(msg.data.some((item) => [1, 2].includes(item.status)));
+          }
+          else
+            setAutoReload(true);
+          return {
+            data: msg.data,
+            success: msg.success,
+          };
+        }}
+
         columns={columns}
-        rowSelection={false}
+        rowSelection={{
+          onChange: (_, selectedRows) => {
+            setSelectedRows(selectedRows);
+          },
+        }}
+        tableAlertRender={({
+                             selectedRowKeys,
+                             onCleanSelected,
+                           }) => {
+          return (
+            <Space size={24}>
+            <span>
+              已选 {selectedRowKeys.length} 项
+              <a style={{marginInlineStart: 8}} onClick={onCleanSelected}>
+                取消选择
+              </a>
+            </span>
+            </Space>
+          );
+        }}
+        tableAlertOptionRender={({selectedRows, onCleanSelected}) => {
+          return (
+            <Space size={16}>
+              <a
+                onClick={async () => {
+                  await handleRemove(selectedRows);
+
+                  if (actionRef.current) {
+                    actionRef.current.reload();
+                    onCleanSelected();
+                  } else {
+                    message.error('任务已经删除');
+                  }
+                }}
+              >
+                批量删除
+              </a>
+              <a
+                onClick={async () => {
+                  await handleStart(selectedRows);
+
+                  if (actionRef.current) {
+                    actionRef.current.reload();
+                    onCleanSelected();
+                  } else {
+                    message.error('任务已经启动');
+                  }
+                }}
+              >
+                批量启动
+              </a>
+            </Space>
+          );
+        }}
       />
       <AddForm
         onSubmit={async (value) => {
@@ -294,7 +417,6 @@ const TableList: React.FC = () => {
           }
         }}
         addModalOpen={createModalOpen}
-        values={currentRow || {}}
       />
       <UpdateForm
         onSubmit={async (value) => {
@@ -338,17 +460,17 @@ const TableList: React.FC = () => {
             }}
             columns={columns as ProDescriptionsItemProps<API_Task.taskListItem>[]}
           >
-            <ProDescriptions.Item label="任务ID" dataIndex="taskId" />
-            <ProDescriptions.Item label="任务创建时间" dataIndex="createTime" valueType="dateTime" />
-            <ProDescriptions.Item label="任务开始时间" dataIndex="startTime" valueType="dateTime" />
-            <ProDescriptions.Item label="任务结束时间" dataIndex="endTime" valueType="dateTime" />
-            <ProDescriptions.Item label="任务类型" dataIndex="mode" valueType="select" />
-            <ProDescriptions.Item label="实时检测端口" dataIndex="port" valueType="textarea" />
-            <ProDescriptions.Item label="离线检测文件名" dataIndex="pcapPath" valueType="textarea" />
-            <ProDescriptions.Item label="正常流量数" dataIndex="normal" valueType="textarea" />
-            <ProDescriptions.Item label="异常流量数" dataIndex="abnormal" valueType="textarea" />
-            <ProDescriptions.Item label="总流量数" dataIndex="total" valueType="textarea" />
-            <ProDescriptions.Item label="状态" dataIndex="status" valueType="select" />
+            <ProDescriptions.Item label="任务ID" dataIndex="taskId"/>
+            <ProDescriptions.Item label="任务创建时间" dataIndex="createTime" valueType="dateTime"/>
+            <ProDescriptions.Item label="任务开始时间" dataIndex="startTime" valueType="dateTime"/>
+            <ProDescriptions.Item label="任务结束时间" dataIndex="endTime" valueType="dateTime"/>
+            <ProDescriptions.Item label="任务类型" dataIndex="mode" valueType="select"/>
+            <ProDescriptions.Item label="实时检测端口" dataIndex="port" valueType="textarea"/>
+            <ProDescriptions.Item label="离线检测文件名" dataIndex="pcapPath" valueType="textarea"/>
+            <ProDescriptions.Item label="正常流量数" dataIndex="normal" valueType="textarea"/>
+            <ProDescriptions.Item label="异常流量数" dataIndex="abnormal" valueType="textarea"/>
+            <ProDescriptions.Item label="总流量数" dataIndex="total" valueType="textarea"/>
+            <ProDescriptions.Item label="状态" dataIndex="status" valueType="select"/>
           </ProDescriptions>
         )}
       </Drawer>

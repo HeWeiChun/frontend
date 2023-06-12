@@ -43,13 +43,13 @@ declare namespace API_Task {
     pcap_file?: File;
   }
 
-  // 开始任务, 修改任务状态
-  type taskListItemStart = {
+  // 单个任务
+  type taskListItemKey = {
     taskId: string;
   }
 
-  // 删除任务
-  type taskListItemDelete = {
-    taskId: string;
+  // 多个任务
+  type taskListItemKeys = {
+    taskIds: string[];
   }
 }
