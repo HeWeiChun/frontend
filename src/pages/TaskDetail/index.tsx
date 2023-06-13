@@ -1,13 +1,13 @@
 import React, {useState, useRef} from 'react';
-import {Divider} from 'antd';
+import {Col, Divider, message, Row, Space, Spin} from 'antd';
 import {
   GridContent,
   ProTable,
   ActionType,
   ProColumns,
 } from '@ant-design/pro-components';
-import {useParams, useRequest} from '@umijs/max';
-import {task, fakeChartData, packet} from './service';
+import {useParams} from '@umijs/max';
+import {task, packet} from './service';
 
 
 const TaskDetailPage: React.FC = () => {
@@ -17,10 +17,6 @@ const TaskDetailPage: React.FC = () => {
   const [searchValue, setSearchValue] = useState(''); // 搜索框的值
   const [selectedTaskId, setSelectedTaskId] = useState('');
   const [allTaskIds, setAllTaskIds] = useState([]); // 所有任务ID列表
-
-
-
-
 
 
   const taskid_columns: ProColumns<API_Task.taskListItem>[] = [
@@ -109,54 +105,89 @@ const TaskDetailPage: React.FC = () => {
     }
   ]
 
-
   return (
-    // <PageContainer>
-    <div style={{display: 'flex', height: '100%'}}>
-      {/* 左侧菜单 */}
-      <ProTable<API_Task.taskListItem, API_Task.taskParams>
-        columns={taskid_columns}
-        rowKey="taskId"
-        rowSelection={{
-          type: 'radio',
-          onSelect: (_, __, selectedRows) => {
-            setSelectedTaskId(selectedRows.map((row) => row.taskId)[0] || '');
-          },
-        }}
-        search={{
-          optionRender: false,
-          collapsed: false,
-        }}
-        request={task}
-      />
+    <GridContent>
+      <Row gutter={16}>
 
-      {/* 任务详细信息 */}
-      <div style={{flex: 1, padding: '16px'}}>
-        {/* 显示任务详细信息 */}
-        <GridContent>
-          <>
-            <Divider>任务概况</Divider>
+        <Col span={4}>
+          {/* 左侧菜单 */}
+          <ProTable<API_Task.taskListItem, API_Task.taskParams>
+            columns={taskid_columns}
+            rowKey="taskId"
+            rowSelection={{
+              type: "radio", onChange: (selectedRowKeys, selectedRows) => {
+                if (selectedRows.length > 0) {
+                  setSelectedTaskId(selectedRows[0].taskId);
+                } else {
+                  setSelectedTaskId('');
+                }
+              }
+            }}
+            tableAlertRender={({
+                                 selectedRowKeys,
+                                 onCleanSelected,
+                               }) => {
+              return (
+                <Space size={24}>
+                  <span>
+                    当前选择{selectedRowKeys[0]}
+                    <a style={{marginInlineStart: 8}} onClick={onCleanSelected}>
+                      取消选择
+                    </a>
+                  </span>
+                </Space>
+              );
+            }}
+            tableAlertOptionRender={false}
+            search={{
+              optionRender: false,
+              collapsed: false,
+            }}
+            request={task}
+          />
+        </Col>
+        {/* 任务详细信息 */}
+        <Col span={20}>
+          {/* 显示任务详细信息 */}
+          <Divider>任务概况</Divider>
+          {selectedTaskId}
 
-            <Divider>流量信息</Divider>
-            {selectedTaskId}
-
-            <Divider>安全事件</Divider>
-            <ProTable<API_Packet.packetListItem, API_Packet.packetParams>
-              headerTitle="数据包列表"
-              actionRef={actionRef}
-              columns={packet_columns}
-              rowKey="PacketId"
-              rowSelection={false}
-              search={false}
-              request={packet}
-            />
-
-          </>
-        </GridContent>
-      </div>
-    </div>
-    // </PageContainer>
-  );
+          {selectedTaskId ? (
+            <>
+              <Divider>安全事件</Divider>
+              <ProTable<API_Packet.packetListItem, API_Packet.packetParams>
+                headerTitle="数据包列表"
+                actionRef={actionRef}
+                columns={packet_columns}
+                rowKey="packetId"
+                rowSelection={false}
+                search={false}
+                request={packet}
+                expandable={{
+                  expandedRowRender: (record) => (
+                    <ProTable<API_Packet.packetListItem, API_Packet.packetParams>
+                      headerTitle="数据包列表"
+                      actionRef={actionRef}
+                      columns={packet_columns}
+                      rowKey="packetId"
+                      rowSelection={false}
+                      search={false}
+                      request={packet}
+                    />
+                  ),
+                  rowExpandable: () => true,
+                }}
+              /></>
+          ) : (
+            <div style={{textAlign: 'center'}}>
+              请选择任务ID
+            </div>
+          )}
+        </Col>
+      </Row>
+    </GridContent>
+  )
+    ;
 };
 
 export default TaskDetailPage;
