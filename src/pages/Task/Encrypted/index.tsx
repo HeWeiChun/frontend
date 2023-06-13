@@ -1,4 +1,4 @@
-import {task, addTask, updateTask, removeTask, startTask} from '@/pages/Task/service';
+import {task, addTask, updateTask, removeTask, startTask} from '@/pages/Task/N2/service';
 import {PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
@@ -7,12 +7,12 @@ import {
   ProTable,
 } from '@ant-design/pro-components';
 import '@umijs/max';
-import {Button, Drawer, message, Space} from 'antd';
+import {Button, Drawer, message, Modal, Space} from 'antd';
 import React, {useEffect, useRef, useState} from 'react';
-import type {UpdateFormValueType} from '@/pages/Task/components/UpdateForm';
-import type {AddFormValueType} from '@/pages/Task/components/AddForm';
-import UpdateForm from '@/pages/Task/components/UpdateForm';
-import AddForm from '@/pages/Task/components/AddForm';
+import type {UpdateFormValueType} from '@/pages/Task/N2/components/UpdateForm';
+import type {AddFormValueType} from '@/pages/Task/N2/components/AddForm';
+import UpdateForm from '@/pages/Task/N2/components/UpdateForm';
+import AddForm from '@/pages/Task/N2/components/AddForm';
 import {v4 as uuidv4} from 'uuid';
 import moment from 'moment';
 
@@ -115,6 +115,8 @@ const handleStart = async (selectedRows: API_Task.taskListItem[]) => {
   }
 };
 
+
+
 const TableList: React.FC = () => {
   // 新建窗口的弹窗
   const [createModalOpen, handleModalOpen] = useState<boolean>(false);
@@ -123,8 +125,32 @@ const TableList: React.FC = () => {
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API_Task.taskListItem>();
-  const [selectedRowsState, setSelectedRows] = useState<API_Task.taskListItem[]>([]);
   const [autoReload, setAutoReload] = useState<boolean>(true);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [deleteTasks, setDeleteTasks] = useState<API_Task.taskListItem[]>([]);
+
+  // 确认删除
+  const showDeleteModal = (deleteTasks: API_Task.taskListItem[]) => {
+    setDeleteModalVisible(true);
+    setDeleteTasks(deleteTasks);
+  };
+
+  const handleDeleteConfirm = async () => {
+    // 调用删除任务的方法
+    await handleRemove(deleteTasks);
+    setCurrentRow(undefined);
+
+    if (actionRef.current) {
+      actionRef.current.reload();
+    } else {
+      message.error('任务已经删除');
+    }
+    setDeleteModalVisible(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalVisible(false);
+  };
 
   // 自动刷新数据
   useEffect(() => {
@@ -288,14 +314,8 @@ const TableList: React.FC = () => {
           canDelete && (
             <a
               key="deleteTask"
-              onClick={async () => {
-                await handleRemove([record]);
-                setCurrentRow(undefined);
-                if (actionRef.current) {
-                  actionRef.current.reload();
-                } else {
-                  message.error('任务已经删除');
-                }
+              onClick={() => {
+                showDeleteModal([record]);
               }}
             >
               删除任务
@@ -344,11 +364,7 @@ const TableList: React.FC = () => {
         }}
 
         columns={columns}
-        rowSelection={{
-          onChange: (_, selectedRows) => {
-            setSelectedRows(selectedRows);
-          },
-        }}
+        rowSelection={{}}
         tableAlertRender={({
                              selectedRowKeys,
                              onCleanSelected,
@@ -368,15 +384,8 @@ const TableList: React.FC = () => {
           return (
             <Space size={16}>
               <a
-                onClick={async () => {
-                  await handleRemove(selectedRows);
-
-                  if (actionRef.current) {
-                    actionRef.current.reload();
-                    onCleanSelected();
-                  } else {
-                    message.error('任务已经删除');
-                  }
+                onClick={() => {
+                  showDeleteModal(selectedRows);
                 }}
               >
                 批量删除
@@ -399,6 +408,18 @@ const TableList: React.FC = () => {
           );
         }}
       />
+      <Modal
+        title="确认删除"
+        open={deleteModalVisible}
+        onOk={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      >
+        {deleteTasks.length === 1 ? (
+          `是否删除任务 ${deleteTasks[0].taskId}?`
+        ) : (
+          `是否删除 ${deleteTasks.length} 个任务?`
+        )}
+      </Modal>
       <AddForm
         onSubmit={async (value) => {
           const success = await handleAdd(value);
