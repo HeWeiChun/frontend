@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import * as echarts from "echarts";
-import {Col} from "antd";
+import {Card, Col} from "antd";
 import ReactEcharts from "echarts-for-react";
 
 class Pie extends Component {
@@ -199,9 +199,12 @@ class Pie extends Component {
       style: { marginBottom: 24 },
     };
     return (
-      <Col {...topColResponsiveProps}>
-        <ReactEcharts option={this.getOption()}/>
-      </Col>
+      <Card>
+        <Col {...topColResponsiveProps}>
+          <ReactEcharts option={this.getOption()}/>
+        </Col>
+      </Card>
+
     )
   }
 }

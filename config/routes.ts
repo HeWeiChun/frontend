@@ -16,7 +16,8 @@ export default [
   //   ],
   // },
   // { name: '查询表格', icon: 'table', path: '/list', component: './TableList' },
-  { name: '概况', icon: 'smile', path: '/abstract', component: './Abstract'},
+  { name: '概况', icon: 'smile', path: '/abstract', component: './AbstractAntv'},
+  { name: '概况_新', icon: 'smile', path: '/abstractnew', component: './Abstract'},
   {
     name: '任务管理',
     icon: 'table',
@@ -32,12 +33,12 @@ export default [
         path: '/task/N2',
         component: './Task/N2',
       },
-      {
-        name: '加密流量',
-        icon: 'table',
-        path: '/task/encrypted',
-        component: './Task/Encrypted',
-      }
+      // {
+      //   name: '加密流量',
+      //   icon: 'table',
+      //   path: '/task/encrypted',
+      //   component: './Task/Encrypted',
+      // }
     ],
   },
   {name: '任务详情', icon: 'profile', path: '/taskdetail', component: './TaskDetail'},

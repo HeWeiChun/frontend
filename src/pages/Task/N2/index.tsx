@@ -72,7 +72,7 @@ const handleRemove = async (selectedRows: API_Task.taskListItem[]) => {
   const hide = message.loading('正在删除');
   if (!selectedRows) return true;
   try {
-    const startableRows = selectedRows.filter((row) => [0, 3, 100].includes(row.status));
+    const startableRows = selectedRows.filter((row) => [0, 5, 100].includes(row.status));
     if (startableRows.length === 0) {
       hide();
       message.error('选中的任务中没有可删除的任务');
@@ -96,7 +96,7 @@ const handleStart = async (selectedRows: API_Task.taskListItem[]) => {
   const hide = message.loading('正在启动');
   if (!selectedRows) return true;
   try {
-    const startableRows = selectedRows.filter((row) => [0, 3, 100].includes(row.status));
+    const startableRows = selectedRows.filter((row) => [0, 5, 100].includes(row.status));
     if (startableRows.length === 0) {
       hide();
       message.error('选中的任务中没有可启动的任务');
@@ -243,14 +243,22 @@ const TableList: React.FC = () => {
           status: 'Default',
         },
         1: {
-          text: '待开始',
+          text: '待解析',
           status: 'Processing',
         },
         2: {
-          text: '正在检测',
+          text: '解析中',
           status: 'Processing',
         },
         3: {
+          text: '待检测',
+          status: 'Processing',
+        },
+        4: {
+          text: '检测中',
+          status: 'Processing',
+        },
+        5: {
           text: '检测完成',
           status: 'Success',
         },
@@ -262,9 +270,9 @@ const TableList: React.FC = () => {
       valueType: 'option',
       render: (_, record) => {
         const canModify = record.status === 0 || record.status === 100;
-        const canRestart = record.status === 3 || record.status === 100;
+        const canRestart = record.status === 5 || record.status === 100;
         const canStart: boolean = record.status === 0;
-        const canDelete: boolean = record.status === 0 || record.status === 3 || record.status === 100;
+        const canDelete: boolean = record.status === 0 || record.status === 5 || record.status === 100;
         return [
           canModify && (
             <a
@@ -353,7 +361,7 @@ const TableList: React.FC = () => {
             pageSize: params.pageSize,
           });
           if (msg.success && msg.data) {
-            setAutoReload(msg.data.some((item) => [1, 2].includes(item.status)));
+            setAutoReload(msg.data.some((item) => [1, 2, 3, 4].includes(item.status)));
           }
           else
             setAutoReload(true);

@@ -1,4 +1,4 @@
-declare namespace API_Packet {
+declare namespace API_Detail {
   type packetParams = {
     current?: number;
     pageSize?: number;
@@ -12,7 +12,6 @@ declare namespace API_Packet {
 
   // 获取所有数据包
   type packetListItem = {
-    packetId: number;
     ngapType: string;
     ngapProcedureCode: string;
     ranUeNgapId:number;
@@ -29,9 +28,33 @@ declare namespace API_Packet {
     statusPacket: number;
   }
 
+  type ueFlowList = {
+    data?: ueFlowListItem[];
+    total?: number;
+    success?: boolean;
+  }
 
-  // 获取特定任务的所有包
-  type packetListByPacketId = {
-    PacketId: number;
+  // 获取所有数据包
+  type ueFlowListItem = {
+    FlowId: number;
+    RanUeNgapId: number;
+    TotalNum: number;
+    StartSecond: number;
+    EndSecond: number;
+    BeginTime: string;
+    LastTime: string;
+    VerificationTag: number;
+    SrcIP: string;
+    DstIP: string;
+    StatusFlow: number;
+    TaskID: string;
+  }
+  // 获取特定流的所有包
+  type packetListByFlow = {
+    FlowId: number;
+  }
+  // 获取特定任务的所有流
+  type flowListByTask = {
+    TaskID: string;
   }
 }

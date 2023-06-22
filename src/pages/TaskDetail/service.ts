@@ -19,12 +19,25 @@ export async function fakeChartData(): Promise<{ data: AnalysisData }> {
 }
 
 // 获取所有流量包
-export async function packet(params: API_Packet.packetParams, options?: { [key: string]: any }) {
-  return request<API_Packet.packetList>('/myapi/packet/getAllPacket', {
+export async function packet(params: API_Detail.packetParams, options?: { [key: string]: any }) {
+  return request<API_Detail.packetList>('/myapi/packet/getAllPacket', {
     method: 'GET',
     params: {
       ...params,
     },
     ...(options || {}),
+  });
+}
+// 获取指定taskid的流
+export async function flowByTask(body: API_Detail.flowListByTask) {
+  return request<API_Detail.ueFlowList>(`/myapi/ueflow/getUEFlowByTaskId?taskId=${body.TaskID}`, {
+    method: 'GET',
+  });
+}
+
+// 获取指定flowid的数据包
+export async function packetByueid(body: API_Detail.packetListByFlow) {
+  return request<API_Detail.packetList>(`/myapi/packet/getPacketByFlowId?flowId=${body.FlowId}`, {
+    method: 'GET',
   });
 }
