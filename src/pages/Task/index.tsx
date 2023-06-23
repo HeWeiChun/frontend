@@ -1,4 +1,4 @@
-import {task, addTask, updateTask, removeTask, startTask} from '@/pages/Task/N2/service';
+import {task, addTask, updateTask, removeTask, startTask} from '@/pages/Task/service';
 import {PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
@@ -9,10 +9,10 @@ import {
 import '@umijs/max';
 import {Button, Drawer, message, Modal, Space} from 'antd';
 import React, {useEffect, useRef, useState} from 'react';
-import type {UpdateFormValueType} from '@/pages/Task/N2/components/UpdateForm';
-import type {AddFormValueType} from '@/pages/Task/N2/components/AddForm';
-import UpdateForm from '@/pages/Task/N2/components/UpdateForm';
-import AddForm from '@/pages/Task/N2/components/AddForm';
+import type {UpdateFormValueType} from '@/pages/Task/components/UpdateForm';
+import type {AddFormValueType} from '@/pages/Task/components/AddForm';
+import UpdateForm from '@/pages/Task/components/UpdateForm';
+import AddForm from '@/pages/Task/components/AddForm';
 import {v4 as uuidv4} from 'uuid';
 import moment from 'moment';
 
