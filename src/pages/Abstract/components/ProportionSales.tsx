@@ -15,8 +15,8 @@ const ProportionSales = ({
   handleChangeSalesType,
 }: {
   loading: boolean;
-  salesType: 'all' | 'online' | 'stores';
-  salesPieData: DataItem[];
+  salesType: 'all' | 'online' | 'offline';
+  salesPieData: API_Abstract.abnormalFlowBinary;
   handleChangeSalesType?: (e: RadioChangeEvent) => void;
 }) => {
   const cardConfig={
@@ -32,8 +32,8 @@ const ProportionSales = ({
         <div className={styles.salesTypeRadio}>
           <Radio.Group value={salesType} onChange={handleChangeSalesType}>
             <Radio.Button value="all">全部流量</Radio.Button>
-            <Radio.Button value="online">离线检测</Radio.Button>
-            <Radio.Button value="stores">在线检测</Radio.Button>
+            <Radio.Button value="offline">离线检测</Radio.Button>
+            <Radio.Button value="online">在线检测</Radio.Button>
           </Radio.Group>
         </div>
       </div>
