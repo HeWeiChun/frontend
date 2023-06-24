@@ -47,7 +47,7 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         }
         contentHeight={46}
       >
-        <TinyColumn height={46} data={[10, 100]}/>
+        <TinyColumn height={46} data={[visitData?.activeTask?.online, visitData?.activeTask?.offline]}/>
       </ChartCard>
     </Col>
 
@@ -58,7 +58,7 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         loading={loading}
         title="已完成任务"
         total={() => visitData?.activeTask?.offline + visitData?.activeTask?.online}
-        footer={<Field label="今日完成任务数" value={numeral(1234).format('0,0')}/>}
+        footer={<Field label="今日完成任务数" value={visitData?.activeTask?.offline + visitData?.activeTask?.online}/>}
         contentHeight={46}
       >
         <TinyArea
@@ -77,8 +77,8 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         loading={loading}
         title="N2口异常数"
         color={'#E5EDFE'}
-        total={() => visitData?.activeTask?.offline + visitData?.activeTask?.online}
-        footer={<Field label="转化率" value="60%"/>}
+        total={() => n2AbNormalSum}
+        footer={<Field label="今日异常数" value={n2AbNormalSum}/>}
         contentHeight={46}
       >
         <TinyColumn height={46} data={n2AbNormalByDate}/>
@@ -91,20 +91,18 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         loading={loading}
         bordered={false}
         title="N2口正常数"
-        total="78%"
+        total={n2NormalSum/(n2AbNormalSum+n2NormalSum)+'%'}
         footer={
           <div style={{whiteSpace: 'nowrap', overflow: 'hidden'}}>
-            周同比
-            <span className={styles.trendText}>12%</span>
-            日同比
-            <span className={styles.trendText}>11%</span>
+            今日正常数
+            <span className={styles.trendText}>{n2AbNormalSum}</span>
           </div>
         }
         contentHeight={46}
       >
         <Progress
           height={46}
-          percent={0.78}
+          percent={n2NormalSum/(n2AbNormalSum+n2NormalSum)}
           color="#13C2C2"
         />
       </ChartCard>
