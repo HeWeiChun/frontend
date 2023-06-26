@@ -1,7 +1,6 @@
 // @ts-ignore
 /* eslint-disable */
 import { request } from '@umijs/max';
-import {AnalysisData} from "@/pages/analysis/data";
 
 // 获取所有任务ID
 export async function task(params: API_Task.taskParams, options?: { [key: string]: any }) {
@@ -13,11 +12,6 @@ export async function task(params: API_Task.taskParams, options?: { [key: string
     ...(options || {}),
   });
 }
-
-export async function fakeChartData(): Promise<{ data: AnalysisData }> {
-  return request('/api/fake_analysis_chart_data');
-}
-
 // 获取所有流量包
 export async function packet(params: API_Detail.packetParams, options?: { [key: string]: any }) {
   return request<API_Detail.packetList>('/myapi/packet/getAllPacket', {

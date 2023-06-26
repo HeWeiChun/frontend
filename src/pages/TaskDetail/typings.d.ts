@@ -23,8 +23,8 @@ declare namespace API_Detail {
     srcIP: string;
     dstIP: string;
     dirSeq: number;
-    flowUEID: number;
-    flowTimeID: number;
+    flowUEID: string;
+    flowTimeID: string;
     statusPacket: number;
   }
 
@@ -36,22 +36,22 @@ declare namespace API_Detail {
 
   // 获取所有数据包
   type ueFlowListItem = {
-    FlowId: number;
-    RanUeNgapId: number;
-    TotalNum: number;
-    StartSecond: number;
-    EndSecond: number;
-    BeginTime: string;
-    LastTime: string;
-    VerificationTag: number;
-    SrcIP: string;
-    DstIP: string;
-    StatusFlow: number;
-    TaskID: string;
+    flowId: string;
+    ranUeNgapId: number;
+    totalNum: number;
+    startSecond: number;
+    endSecond: number;
+    beginTime: string;
+    lastTime: string;
+    verificationTag: number;
+    srcIP: string;
+    dstIP: string;
+    statusFlow: number;
+    taskID: string;
   }
   // 获取特定流的所有包
   type packetListByFlow = {
-    FlowId: number;
+    FlowId: string;
   }
   // 获取特定任务的所有流
   type flowListByTask = {

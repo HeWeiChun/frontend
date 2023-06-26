@@ -14,23 +14,37 @@ const topColResponsiveProps = {
   style: {marginBottom: 24},
 };
 
-const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_Abstract.introduce }) => {
-  console.log(loading, visitData)
+const IntroduceRow = ({loading, introduceData}: { loading: boolean; introduceData: API_Abstract.introduce }) => {
   const today = new Date();
-  const pastDates = [];
+  const pastDates:string[] = [];
   for (let i = 6; i >= 0; i--) {
     const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
-    const dateString = date.toISOString().split('T')[0];
-    pastDates.push(dateString);
+    const dateString = date.toLocaleDateString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    pastDates.push(dateString.split('/').join('-'));
   }
-  const n2NormalByDate = pastDates.map(date => visitData.n2Normal[date] || 0 );
-  const n2AbNormalByDate = pastDates.map(date => visitData.n2Abnormal[date] || 0 );
 
+  const completedTaskByDate = pastDates.map(date => {
+    const item = introduceData.completedTask.find(item => item.dateByDay === date);
+    return item ? item.completeTaskByDay : 0;
+  });
+  const n2NormalByDate = pastDates.map(date => {
+    const item = introduceData.n2Normal.find(item => item.dateByDay === date);
+    return item ? item.n2NormalByDay : 0;
+  });
+  const n2AbNormalByDate = pastDates.map(date => {
+    const item = introduceData.n2Abnormal.find(item => item.dateByDay === date);
+    return item ? item.n2AbnormalByDay : 0;
+  });
+  const n2NormalSum = introduceData.n2Normal.reduce((sum, value) => sum + value.n2NormalByDay, 0);
+  const n2AbNormalSum = introduceData.n2Abnormal.reduce((sum, value) => sum + value.n2AbnormalByDay, 0);
 
-  const n2NormalSum = Object.values(visitData.n2Normal).reduce((sum, value) => sum + value, 0);
-  const n2AbNormalSum = Object.values(visitData.n2Abnormal).reduce((sum, value) => sum + value, 0);
-
-
+  const todayCompletedTask = introduceData.completedTask.find(item => item.dateByDay === pastDates[6]);
+  const todayn2Abnormal = introduceData.n2Abnormal.find(item => item.dateByDay === pastDates[6]);
+  const todayn2Normal = introduceData.n2Normal.find(item => item.dateByDay === pastDates[6]);
   return (
     <Row gutter={24}>
     {/*活跃任务*/}
@@ -39,15 +53,15 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         bordered={false}
         title="活跃任务"
         loading={loading}
-        total={() => visitData?.activeTask?.offline + visitData?.activeTask?.online}
+        total={() => introduceData?.activeTask?.offline + introduceData?.activeTask?.online}
         footer={
           <div>
-            在线任务: {visitData?.activeTask?.online}; 离线任务: {visitData?.activeTask?.offline}
+            在线任务: {introduceData?.activeTask?.online}; 离线任务: {introduceData?.activeTask?.offline}
           </div>
         }
         contentHeight={46}
       >
-        <TinyColumn height={46} data={[visitData?.activeTask?.online, visitData?.activeTask?.offline]}/>
+        <TinyColumn height={46} data={[introduceData?.activeTask?.online, introduceData?.activeTask?.offline]}/>
       </ChartCard>
     </Col>
 
@@ -57,15 +71,15 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         bordered={false}
         loading={loading}
         title="已完成任务"
-        total={() => visitData?.activeTask?.offline + visitData?.activeTask?.online}
-        footer={<Field label="今日完成任务数" value={visitData?.activeTask?.offline + visitData?.activeTask?.online}/>}
+        total={() => introduceData?.activeTask?.offline + introduceData?.activeTask?.online}
+        footer={<Field label="今日完成任务数" value={todayCompletedTask?todayCompletedTask.completeTaskByDay:0}/>}
         contentHeight={46}
       >
         <TinyArea
           height={46}
           autoFit={false}
-          smooth={true}
-          data={[1,2]}
+          smooth={false}
+          data={completedTaskByDate}
         />
       </ChartCard>
     </Col>
@@ -78,7 +92,7 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         title="N2口异常数"
         color={'#E5EDFE'}
         total={() => n2AbNormalSum}
-        footer={<Field label="今日异常数" value={n2AbNormalSum}/>}
+        footer={<Field label="今日异常数" value={todayn2Abnormal?todayn2Abnormal.n2AbnormalByDay:0}/>}
         contentHeight={46}
       >
         <TinyColumn height={46} data={n2AbNormalByDate}/>
@@ -95,7 +109,7 @@ const IntroduceRow = ({loading, visitData}: { loading: boolean; visitData: API_A
         footer={
           <div style={{whiteSpace: 'nowrap', overflow: 'hidden'}}>
             今日正常数
-            <span className={styles.trendText}>{n2AbNormalSum}</span>
+            <span className={styles.trendText}>{todayn2Normal?todayn2Normal.n2NormalByDay:0}</span>
           </div>
         }
         contentHeight={46}

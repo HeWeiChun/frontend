@@ -26,14 +26,7 @@ const columns = [
   },
 ];
 
-const TopSearch = ({
-  loading,
-  abnormalEvent
-}: {
-  loading: boolean;
-  abnormalEvent: API_Detail.ueFlowListItem[];
-}) => {
-  debugger;
+const TopSearch = ({loading, abnormalEvent}: { loading: boolean; abnormalEvent: API_Detail.ueFlowListItem[]; }) => {
   return (
     <Card
       loading={loading}
@@ -89,6 +82,7 @@ const TopSearch = ({
         pagination={{
           style: {marginBottom: 0},
           pageSize: 5,
+          showSizeChanger: false
         }}
       />
     </Card>

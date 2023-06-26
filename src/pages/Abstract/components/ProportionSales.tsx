@@ -62,8 +62,9 @@ const ProportionSales = ({
     angleField:"y",
     colorField:"x",
     data:salesPieData as any,
-    legend:{
-      visible:false,
+    legend: {
+      layout: 'horizontal',
+      position: 'right'
     },
     label:{
       formatter:(text, item)=>{

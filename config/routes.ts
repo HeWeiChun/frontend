@@ -20,6 +20,6 @@ export default [
   { name: '概况', icon: 'smile', path: '/abstractnew', component: './Abstract'},
   { name: '任务管理', icon: 'table', path: '/task', component: './Task' },
   {name: '任务详情', icon: 'profile', path: '/taskdetail', component: './TaskDetail'},
-  { path: '/', redirect: '/task' },
+  { path: '/', redirect: '/abstractnew' },
   { path: '*', layout: false, component: './404' },
 ];

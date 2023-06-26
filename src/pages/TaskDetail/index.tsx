@@ -1,6 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {PageLoading} from "@ant-design/pro-components";
-import {Col, Divider, message, Row, Space, Spin} from 'antd';
+import {Col, Divider, Row, Space} from 'antd';
 import {
   GridContent,
   ProTable,
@@ -8,7 +7,7 @@ import {
   ProColumns,
 } from '@ant-design/pro-components';
 import {useParams} from '@umijs/max';
-import {task, packet,flowByTask,packetByueid} from './service';
+import {task, flowByTask,packetByueid} from './service';
 
 
 const TaskDetailPage: React.FC = () => {
@@ -197,6 +196,7 @@ const TaskDetailPage: React.FC = () => {
       title: '校验码',
       dataIndex: 'verificationTag',
       valueType: 'textarea',
+      hideInTable: true,
     },
     {
       title: '源IP',
@@ -212,6 +212,7 @@ const TaskDetailPage: React.FC = () => {
       title: '方向',
       dataIndex: 'dirSeq',
       valueType: 'textarea',
+      hideInTable: true,
     },
     {
       title: 'UEID流ID',
