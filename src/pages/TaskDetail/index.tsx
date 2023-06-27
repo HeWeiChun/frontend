@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect, Suspense} from 'react';
 import {Col, Divider, Row, Space} from 'antd';
 import {
   GridContent,
@@ -6,12 +6,12 @@ import {
   ActionType,
   ProColumns,
 } from '@ant-design/pro-components';
-import {useParams} from '@umijs/max';
-import {task, flowByTask,packetByueid} from './service';
+import {task, flowByTask,packetByueid, abstractById} from './service';
+import PageLoading from "@/pages/TaskDetail/components/PageLoading";
+import IntroduceRow from "@/pages/TaskDetail/components/IntroduceRow";
 
 
 const TaskDetailPage: React.FC = () => {
-  const {taskId} = useParams(); // 从路由参数中获取指定的任务ID
   const actionRef = useRef<ActionType>();
   // 为每个表项维护展开状态的状态数组
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
@@ -28,24 +28,18 @@ const TaskDetailPage: React.FC = () => {
       setExpandedRows([...expandedRows, flowId]);
     }
   };
+  const [abstractValue, setAbstractValue] = useState<API_Detail.abstract>({
+    abnormalFlowBinary: {abnormal: 0, normal: 0},
+    abnormalFlowMulti: {abnormal: 0, normal: 0},
+    activeDetectedFlows: 0,
+    activePendingFlows: 0
+  });
 
-  // 判断表项是否展开
-  const isRowExpanded = (record: API_Detail.ueFlowListItem) => {
-    return expandedRows.includes(record.flowId);
-  };
+  const [loading, setLoading] = useState<boolean>(true);
 
-
-  const [searchValue, setSearchValue] = useState(''); // 搜索框的值
   const [selectedTaskId, setSelectedTaskId] = useState('');
-  const [allTaskIds, setAllTaskIds] = useState([]); // 所有任务ID列表
 
-  const taskid_columns: ProColumns<API_Task.taskListItem>[] = [
-    {
-      title: '任务ID',
-      dataIndex: 'taskId',
-      valueType: 'textarea',
-    },
-  ]
+  // 未选择任务id时, 显示更详细的任务信息
   const taskid_columns_detail: ProColumns<API_Task.taskListItem>[] = [
     {
       title: '任务ID',
@@ -102,7 +96,15 @@ const TaskDetailPage: React.FC = () => {
       },
     }
   ]
-
+  // 选择任务id后只显示任务id
+  const taskid_columns: ProColumns<API_Task.taskListItem>[] = [
+    {
+      title: '任务ID',
+      dataIndex: 'taskId',
+      valueType: 'textarea',
+    },
+  ]
+  // 选择任务id后, 显示对应的流信息
   const ueflow_columns: ProColumns<API_Detail.ueFlowListItem>[] = [
     {
       title: '流ID',
@@ -153,8 +155,7 @@ const TaskDetailPage: React.FC = () => {
       valueType: 'textarea',
     }
   ]
-
-
+  // 选择流id后, 显示对应的数据包信息
   const packet_columns: ProColumns<API_Detail.packetListItem>[] = [
     {
       title: 'UE_ID',
@@ -234,6 +235,25 @@ const TaskDetailPage: React.FC = () => {
     }
   ]
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const msg = await abstractById({TaskID: selectedTaskId});
+      setAbstractValue(msg.data);
+    };
+    setLoading(false);
+    if (selectedTaskId) {
+      fetchData();
+    }
+    else {
+      setAbstractValue({
+        abnormalFlowBinary: {abnormal: 0, normal: 0},
+        abnormalFlowMulti: {abnormal: 0, normal: 0},
+        activeDetectedFlows: 0,
+        activePendingFlows: 0
+      });
+    }
+  },[selectedTaskId]);
+
   return (
     <GridContent>
       <Row gutter={16}>
@@ -277,15 +297,20 @@ const TaskDetailPage: React.FC = () => {
             request={task}
           />
         </Col>
+
         {/* 任务详细信息 */}
         <Col span={20}>
           {/* 显示任务详细信息 */}
-
-
           {selectedTaskId ? (
             <>
-              {/*<Divider>任务概况</Divider>*/}
-              {/*{selectedTaskId}*/}
+              <Divider>任务概况</Divider>
+              <GridContent>
+                <>
+                    <Suspense fallback={<PageLoading />}>
+                      <IntroduceRow loading={false} introduceData={abstractValue} />
+                    </Suspense>
+                </>
+              </GridContent>
               <Divider>安全事件</Divider>
               <ProTable<API_Detail.ueFlowListItem, API_Detail.packetParams>
                 headerTitle="异常流列表"

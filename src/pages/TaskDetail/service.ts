@@ -35,3 +35,9 @@ export async function packetByueid(body: API_Detail.packetListByFlow) {
     method: 'GET',
   });
 }
+// 获取指定taskid的摘要
+export async function abstractById(body: API_Detail.flowListByTask) {
+  return request<API_Detail.abstractList>(`/myapi/abstract/getAbstractByID?taskId=${body.TaskID}`, {
+    method: 'GET',
+  });
+}

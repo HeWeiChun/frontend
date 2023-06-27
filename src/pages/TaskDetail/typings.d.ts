@@ -57,4 +57,38 @@ declare namespace API_Detail {
   type flowListByTask = {
     TaskID: string;
   }
+  // 介绍栏
+  type abstractList = {
+    code: number;
+    message: string;
+    type: string;
+    success: boolean;
+    data: API_Detail.abstract;
+  }
+  // 分页
+  type abnormalParams = {
+    current?: number;
+    pageSize?: number;
+  };
+
+
+  // 异常流量类别占比(二分类)
+  type abnormalFlowBinary = {
+    normal: number;
+    abnormal: number;
+  }
+
+  // 异常流量类别占比(多分类)
+  type abnormalFlowMulti = {
+    normal: number;
+    abnormal: number;
+  }
+
+  // 概况页
+  type abstract = {
+    activeDetectedFlows: number;
+    activePendingFlows: number;
+    abnormalFlowBinary: abnormalFlowBinary;
+    abnormalFlowMulti: abnormalFlowMulti;
+  }
 }

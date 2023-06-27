@@ -188,12 +188,12 @@ const TableList: React.FC = () => {
       valueType: 'dateTime',
     },
     {
-      title: '任务开始时间',
+      title: '检测开始时间',
       dataIndex: 'startTime',
       valueType: 'dateTime',
     },
     {
-      title: '任务结束时间',
+      title: '检测结束时间',
       dataIndex: 'endTime',
       valueType: 'dateTime',
     },
