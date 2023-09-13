@@ -19,6 +19,8 @@ export async function addTask(body: API_Task.taskListItemAdd, options?: { [key: 
   params.append('taskId', body.taskId)
   params.append('createTime', body.createTime);
   params.append('mode', body.mode);
+  params.append('model', body.model)
+
   if (body.port) {
     params.append('port', body.port);
   }
@@ -36,6 +38,7 @@ export async function updateTask(body: API_Task.taskListItemUpdate, options?: { 
   let params = new FormData();
   params.append('taskId', body.taskId)
   params.append('mode', body.mode);
+  params.append('model', body.model)
   if (body.port) {
     params.append('port', body.port);
   }

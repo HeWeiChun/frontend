@@ -10,6 +10,7 @@ import React from 'react';
 
 export type AddFormValueType = {
   mode: number;
+  model: number;
   port?: number;
   status: number;
   pcapFile?: File;
@@ -54,6 +55,30 @@ const AddForm: React.FC<AddFormProps> = (props) => {
             {
               required: true,
               message: "请选择任务类型"
+            },
+          ]}
+        />
+        <ProFormRadio.Group
+          name="model"
+          label="模型"
+          options={[
+            {
+              label: 'XGBoost二分类',
+              value: 0,
+            },
+            {
+              label: 'XGBoost多分类',
+              value: 1,
+            },
+            {
+              label: 'Whisper二分类',
+              value: 2
+            }
+          ]}
+          rules={[
+            {
+              required: true,
+              message: "请选择模型"
             },
           ]}
         />

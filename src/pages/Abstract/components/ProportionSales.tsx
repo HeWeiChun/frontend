@@ -3,7 +3,6 @@ import numeral from 'numeral';
 import type { RadioChangeEvent } from 'antd/es/radio';
 import { Pie, measureTextWidth} from '@ant-design/plots';
 import React from 'react';
-import type { DataItem } from '../data.d';
 import styles from '../style.less';
 
 

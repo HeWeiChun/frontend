@@ -23,6 +23,7 @@ declare namespace API_Task {
     abnormal?: number;
     total?: number;
     status: number;
+    model: number;
   }
 
   // 添加任务
@@ -32,6 +33,7 @@ declare namespace API_Task {
     mode: number;
     port?: number;
     status: number;
+    model: number;
     pcap_file?: File;
   }
 
@@ -40,6 +42,7 @@ declare namespace API_Task {
     taskId: string;
     mode: number;
     port?: number;
+    model: number;
     pcap_file?: File;
   }
 

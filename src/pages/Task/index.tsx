@@ -28,6 +28,7 @@ const handleAdd = async (fields: AddFormValueType) => {
       taskId: uuidv4(),
       createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
       mode: fields.mode,
+      model: fields.model,
       port: fields.port,
       status: 0,
       pcap_file: file,
@@ -52,6 +53,7 @@ const handleUpdate = async (fields: UpdateFormValueType) => {
   try {
     await updateTask({
       taskId: fields.taskId,
+      model: fields.model,
       mode: fields.mode,
       port: fields.port,
       pcapFile: file,
@@ -202,6 +204,13 @@ const TableList: React.FC = () => {
       dataIndex: 'mode',
       renderText: (val: number) => {
         return val === 1 ? '实时' : '离线';
+      },
+    },
+    {
+      title: '检测模型',
+      dataIndex: 'model',
+      renderText: (val: number) => {
+        return val === 0 ? 'XGBoost二分类模型' : (val === 1 ? 'XGBoost多分类模型' : 'Whisper二分类模型');
       },
     },
     {
