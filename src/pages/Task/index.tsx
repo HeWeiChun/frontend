@@ -171,18 +171,19 @@ const TableList: React.FC = () => {
       title: '任务ID',
       dataIndex: 'taskId',
       tip: '点击查看任务详情',
-      render: (dom, entity) => {
-        return (
-          <a
-            onClick={() => {
-              setCurrentRow(entity);
-              setShowDetail(true);
-            }}
-          >
-            {dom}
-          </a>
-        );
-      },
+      ellipsis: true,
+      // render: (dom, entity) => {
+      //   return (
+      //     <a
+      //       onClick={() => {
+      //         setCurrentRow(entity);
+      //         setShowDetail(true);
+      //       }}
+      //     >
+      //       {dom}
+      //     </a>
+      //   );
+      // },
     },
     {
       title: '任务创建时间',
@@ -199,25 +200,25 @@ const TableList: React.FC = () => {
       dataIndex: 'endTime',
       valueType: 'dateTime',
     },
-    {
-      title: '任务类型',
-      dataIndex: 'mode',
-      renderText: (val: number) => {
-        return val === 1 ? '实时' : '离线';
-      },
-    },
+    // {
+    //   title: '任务类型',
+    //   dataIndex: 'mode',
+    //   renderText: (val: number) => {
+    //     return val === 1 ? '实时' : '离线';
+    //   },
+    // },
     {
       title: '检测模型',
       dataIndex: 'model',
       renderText: (val: number) => {
-        return val === 0 ? 'XGBoost二分类模型' : (val === 1 ? 'XGBoost多分类模型' : 'Whisper二分类模型');
+        return val === 0 ? 'XGBoost(UEID聚合)' : (val === 1 ? 'XGBoost(时间片聚合)' : 'Whisper(UEID聚合)');
       },
     },
-    {
-      title: '实时检测端口',
-      dataIndex: 'port',
-      valueType: 'textarea',
-    },
+    // {
+    //   title: '实时检测端口',
+    //   dataIndex: 'port',
+    //   valueType: 'textarea',
+    // },
     {
       title: '离线检测文件名',
       dataIndex: 'pcapPath',
@@ -242,6 +243,8 @@ const TableList: React.FC = () => {
     {
       title: '状态',
       dataIndex: 'status',
+      filters: true,
+      onFilter: true,
       valueEnum: {
         100: {
           text: '错误',

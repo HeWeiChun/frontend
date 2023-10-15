@@ -4,6 +4,7 @@ import {
   ProFormUploadButton,
   ProFormDependency,
   ProFormRadio,
+  ProFormSelect
 } from '@ant-design/pro-components';
 import {Modal} from 'antd';
 import React from 'react';
@@ -38,6 +39,32 @@ const AddForm: React.FC<AddFormProps> = (props) => {
       <ProForm
         onFinish={props.onSubmit}
       >
+        <ProFormSelect
+            width="sm"
+            options={[
+              {
+                label: 'XGBoost(UEID聚合)',
+                value: 0,
+              },
+              {
+                label: 'XGBoost(Time聚合)',
+                value: 1,
+              },
+              {
+                label: 'Whisper(UEID聚合)',
+                value: 2
+              }
+            ]}
+            rules={[
+              {
+                required: true,
+                message: "请选择模型"
+              },
+            ]}
+            name="model"
+            label="模型"
+        />
+
         <ProFormRadio.Group
           name="mode"
           label="任务类型"
@@ -58,30 +85,8 @@ const AddForm: React.FC<AddFormProps> = (props) => {
             },
           ]}
         />
-        <ProFormRadio.Group
-          name="model"
-          label="模型"
-          options={[
-            {
-              label: 'XGBoost二分类',
-              value: 0,
-            },
-            {
-              label: 'XGBoost多分类',
-              value: 1,
-            },
-            {
-              label: 'Whisper二分类',
-              value: 2
-            }
-          ]}
-          rules={[
-            {
-              required: true,
-              message: "请选择模型"
-            },
-          ]}
-        />
+
+
         <ProForm.Group>
           <ProFormDependency name={["mode"]}>
             {({mode}) => {

@@ -45,6 +45,12 @@ const TaskDetailPage: React.FC = () => {
       title: '任务ID',
       dataIndex: 'taskId',
       valueType: 'textarea',
+      ellipsis: true,
+    },
+    {
+      title: '离线检测文件名',
+      dataIndex: 'pcapPath',
+      valueType: 'textarea',
     },
     {
       title: '任务创建时间',
@@ -102,6 +108,7 @@ const TaskDetailPage: React.FC = () => {
       title: '任务ID',
       dataIndex: 'taskId',
       valueType: 'textarea',
+      ellipsis: true,
     },
   ]
   // 选择任务id后, 显示对应的流信息
@@ -134,6 +141,8 @@ const TaskDetailPage: React.FC = () => {
     {
       title: '流状态',
       dataIndex: 'statusFlow',
+      filters: true,
+      onFilter: true,
       valueEnum: {
         100: {
           text: '正常',
@@ -153,6 +162,7 @@ const TaskDetailPage: React.FC = () => {
       title: '任务ID',
       dataIndex: 'taskID',
       valueType: 'textarea',
+      ellipsis: true,
     }
   ]
   // 选择流id后, 显示对应的数据包信息
@@ -186,12 +196,12 @@ const TaskDetailPage: React.FC = () => {
     {
       title: '到达时间',
       dataIndex: 'arriveTime',
-      valueType: 'dateTime',
     },
     {
       title: '时间间隔',
       dataIndex: 'timeInterval',
       valueType: 'textarea',
+      hideInTable: true,
     },
     {
       title: '校验码',

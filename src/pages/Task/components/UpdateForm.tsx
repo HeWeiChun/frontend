@@ -68,15 +68,15 @@ const UpdateForm: React.FC<UpdateFormProps> = (props) => {
           label="模型"
           options={[
             {
-              label: 'XGBoost二分类',
+              label: 'XGBoost(UEID聚合)',
               value: 0,
             },
             {
-              label: 'XGBoost多分类',
+              label: 'XGBoost(时间片聚合)',
               value: 1,
             },
             {
-              label: 'Whisper二分类',
+              label: 'Whisper(UEID聚合)',
               value: 2
             }
           ]}

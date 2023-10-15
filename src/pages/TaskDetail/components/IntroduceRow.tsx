@@ -45,7 +45,7 @@ const IntroduceRow = ({loading, introduceData}: { loading: boolean; introduceDat
           loading={loading}
           bordered={false}
           title="检测异常率"
-          total={abnormal/(abnormal+normal) * 100+'%'}
+          total={(abnormal/(abnormal+normal) * 100).toFixed(3)+'%'}
           footer={
             <div style={{whiteSpace: 'nowrap', overflow: 'hidden'}}>
               异常数

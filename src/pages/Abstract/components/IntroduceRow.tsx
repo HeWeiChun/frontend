@@ -104,8 +104,8 @@ const IntroduceRow = ({loading, introduceData}: { loading: boolean; introduceDat
         <ChartCard
           loading={loading}
           bordered={false}
-          title="N2口正常数"
-          total={n2NormalSum/(n2AbNormalSum+n2NormalSum)+'%'}
+          title="N2口正常率"
+          total={(n2NormalSum/(n2AbNormalSum+n2NormalSum)*100).toFixed(3)+'%'}
           footer={
             <div style={{whiteSpace: 'nowrap', overflow: 'hidden'}}>
               今日正常数
