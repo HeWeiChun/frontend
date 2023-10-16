@@ -31,19 +31,19 @@ declare namespace API_Task {
     taskId: string;
     createTime: string;
     mode: number;
-    port?: number;
+    // port?: number;
     status: number;
     model: number;
-    pcap_file?: File;
+    pcap_file: File;
   }
 
   // 启动任务前修改任务
   type taskListItemUpdate = {
     taskId: string;
     mode: number;
-    port?: number;
+    // port?: number;
     model: number;
-    pcap_file?: File;
+    pcap_file: File;
   }
 
   // 单个任务

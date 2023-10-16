@@ -1,4 +1,4 @@
-import {task, addTask, updateTask, removeTask, startTask} from '@/pages/Task/service';
+import {task, addTask, removeTask, startTask} from '@/pages/Task/service';
 import {PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns, ProDescriptionsItemProps} from '@ant-design/pro-components';
 import {
@@ -9,9 +9,7 @@ import {
 import '@umijs/max';
 import {Button, Drawer, message, Modal, Space} from 'antd';
 import React, {useEffect, useRef, useState} from 'react';
-import type {UpdateFormValueType} from '@/pages/Task/components/UpdateForm';
 import type {AddFormValueType} from '@/pages/Task/components/AddForm';
-import UpdateForm from '@/pages/Task/components/UpdateForm';
 import AddForm from '@/pages/Task/components/AddForm';
 import {v4 as uuidv4} from 'uuid';
 import moment from 'moment';
@@ -19,55 +17,26 @@ import moment from 'moment';
 // 创建任务
 const handleAdd = async (fields: AddFormValueType) => {
   const hide = message.loading('正在添加');
-  let file;
-  if (fields.pcapFile) {
-    file = fields.pcapFile[0].originFileObj;
-  } else file = null;
-  try {
-    await addTask({
-      taskId: uuidv4(),
-      createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
-      mode: fields.mode,
-      model: fields.model,
-      port: fields.port,
-      status: 0,
-      pcap_file: file,
-    });
-    hide();
-    message.success('成功创建任务');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('创建失败, 请重试!');
-    return false;
+  if(fields.mode == 0) {
+    try {
+      await addTask({
+        taskId: uuidv4(),
+        createTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+        mode: fields.mode,
+        model: fields.model,
+        status: 0,
+        pcap_file: fields.pcapFile[0].originFileObj,
+      });
+      hide();
+      message.success('成功创建任务');
+      return true;
+    } catch (error) {
+      hide();
+      message.error('创建失败, 请重试!');
+      return false;
+    }
   }
 };
-
-// 更新任务
-const handleUpdate = async (fields: UpdateFormValueType) => {
-  const hide = message.loading('正在更新');
-  let file;
-  if (fields.pcapFile && fields.pcapFile.length > 0) {
-    file = fields.pcapFile[0].originFileObj;
-  } else file = null;
-  try {
-    await updateTask({
-      taskId: fields.taskId,
-      model: fields.model,
-      mode: fields.mode,
-      port: fields.port,
-      pcapFile: file,
-    });
-    hide();
-    message.success('成功更新任务信息');
-    return true;
-  } catch (error) {
-    hide();
-    message.error('更新失败, 请重试!');
-    return false;
-  }
-};
-
 
 // 批量删除
 const handleRemove = async (selectedRows: API_Task.taskListItem[]) => {
@@ -118,12 +87,10 @@ const handleStart = async (selectedRows: API_Task.taskListItem[]) => {
 };
 
 
-
 const TableList: React.FC = () => {
   // 新建窗口的弹窗
   const [createModalOpen, handleModalOpen] = useState<boolean>(false);
   // 更新窗口的弹窗
-  const [updateModalOpen, handleUpdateModalOpen] = useState<boolean>(false);
   const [showDetail, setShowDetail] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   const [currentRow, setCurrentRow] = useState<API_Task.taskListItem>();
@@ -281,22 +248,10 @@ const TableList: React.FC = () => {
       dataIndex: 'option',
       valueType: 'option',
       render: (_, record) => {
-        const canModify = record.status === 0 || record.status === 100;
         const canRestart = record.status === 5 || record.status === 100;
         const canStart: boolean = record.status === 0;
         const canDelete: boolean = record.status === 0 || record.status === 5 || record.status === 100;
         return [
-          canModify && (
-            <a
-              key="config"
-              onClick={() => {
-                handleUpdateModalOpen(true);
-                setCurrentRow(record);
-              }}
-            >
-              修改
-            </a>
-          ),
           canRestart && (
             <a
               key="restartTask"
@@ -365,17 +320,16 @@ const TableList: React.FC = () => {
         ]}
 
         request={async (params: {
-                          pageSize?: number;
-                          current?: number;
-                        },) => {
+          pageSize?: number;
+          current?: number;
+        },) => {
           const msg = await task({
             current: params.current,
             pageSize: params.pageSize,
           });
           if (msg.success && msg.data) {
-            setAutoReload(msg.data.some((item) => [1, 2, 3, 4].includes(item.status)));
-          }
-          else
+            setAutoReload(msg.data.some((item: { status: number; }) => [1, 2, 3, 4].includes(item.status)));
+          } else
             setAutoReload(true);
           return {
             data: msg.data,
@@ -459,26 +413,26 @@ const TableList: React.FC = () => {
         }}
         addModalOpen={createModalOpen}
       />
-      <UpdateForm
-        onSubmit={async (value) => {
-          const success = await handleUpdate(value);
-          if (success) {
-            handleUpdateModalOpen(false);
-            setCurrentRow(undefined);
-            if (actionRef.current) {
-              actionRef.current.reload();
-            }
-          }
-        }}
-        onCancel={() => {
-          handleUpdateModalOpen(false);
-          if (!showDetail) {
-            setCurrentRow(undefined);
-          }
-        }}
-        updateModalOpen={updateModalOpen}
-        values={currentRow || {}}
-      />
+      {/*<UpdateForm*/}
+      {/*  onSubmit={async (value) => {*/}
+      {/*    const success = await handleUpdate(value);*/}
+      {/*    if (success) {*/}
+      {/*      handleUpdateModalOpen(false);*/}
+      {/*      setCurrentRow(undefined);*/}
+      {/*      if (actionRef.current) {*/}
+      {/*        actionRef.current.reload();*/}
+      {/*      }*/}
+      {/*    }*/}
+      {/*  }}*/}
+      {/*  onCancel={() => {*/}
+      {/*    handleUpdateModalOpen(false);*/}
+      {/*    if (!showDetail) {*/}
+      {/*      setCurrentRow(undefined);*/}
+      {/*    }*/}
+      {/*  }}*/}
+      {/*  updateModalOpen={updateModalOpen}*/}
+      {/*  values={currentRow || {}}*/}
+      {/*/>*/}
 
       <Drawer
         width={600}

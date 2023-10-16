@@ -10,9 +10,7 @@ import React from 'react';
 
 export type UpdateFormValueType = {
   taskId: string;
-  mode: number;
   model: number;
-  port?: number;
   pcapFile?: File;
 };
 
