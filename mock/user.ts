@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -46,7 +47,7 @@ export default {
   },
   'POST /api/login/account': async (req: Request, res: Response) => {
     const { password, username, type } = req.body;
-    await waitTime(2000);
+    await waitTime(500);
     if (password === 'admin' && username === 'admin') {
       res.send({
         status: 'ok',
