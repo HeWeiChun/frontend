@@ -1,7 +1,6 @@
-import {TinyArea, TinyColumn, Progress} from '@ant-design/plots';
+import {Progress} from '@ant-design/plots';
 import {Col, Row} from 'antd';
 
-import numeral from 'numeral';
 import {ChartCard, Field} from './Charts';
 import styles from '../style.less';
 

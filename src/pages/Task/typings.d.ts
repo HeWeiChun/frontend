@@ -35,19 +35,6 @@ declare namespace API_Task {
     pcap_file: File;
   }
 
-  // 启动任务前修改任务
-  type taskListItemUpdate = {
-    taskId: string;
-    mode: number;
-    model: number;
-    pcap_file: File;
-  }
-
-  // 单个任务
-  type taskListItemKey = {
-    taskId: string;
-  }
-
   // 多个任务
   type taskListItemKeys = {
     taskIds: string[];
