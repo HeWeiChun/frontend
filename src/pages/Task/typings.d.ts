@@ -17,7 +17,6 @@ declare namespace API_Task {
     startTime?: string;
     endTime?: string;
     mode: number;
-    port?: number;
     pcapPath?: string;
     normal?: number;
     abnormal?: number;
@@ -31,7 +30,6 @@ declare namespace API_Task {
     taskId: string;
     createTime: string;
     mode: number;
-    // port?: number;
     status: number;
     model: number;
     pcap_file: File;
@@ -41,7 +39,6 @@ declare namespace API_Task {
   type taskListItemUpdate = {
     taskId: string;
     mode: number;
-    // port?: number;
     model: number;
     pcap_file: File;
   }

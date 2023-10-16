@@ -137,20 +137,7 @@ const TableList: React.FC = () => {
     {
       title: '任务ID',
       dataIndex: 'taskId',
-      tip: '点击查看任务详情',
       ellipsis: true,
-      // render: (dom, entity) => {
-      //   return (
-      //     <a
-      //       onClick={() => {
-      //         setCurrentRow(entity);
-      //         setShowDetail(true);
-      //       }}
-      //     >
-      //       {dom}
-      //     </a>
-      //   );
-      // },
     },
     {
       title: '任务创建时间',
@@ -167,13 +154,6 @@ const TableList: React.FC = () => {
       dataIndex: 'endTime',
       valueType: 'dateTime',
     },
-    // {
-    //   title: '任务类型',
-    //   dataIndex: 'mode',
-    //   renderText: (val: number) => {
-    //     return val === 1 ? '实时' : '离线';
-    //   },
-    // },
     {
       title: '检测模型',
       dataIndex: 'model',
@@ -181,13 +161,8 @@ const TableList: React.FC = () => {
         return val === 0 ? 'XGBoost(UEID聚合)' : (val === 1 ? 'XGBoost(时间片聚合)' : 'Whisper(UEID聚合)');
       },
     },
-    // {
-    //   title: '实时检测端口',
-    //   dataIndex: 'port',
-    //   valueType: 'textarea',
-    // },
     {
-      title: '离线检测文件名',
+      title: '检测文件名',
       dataIndex: 'pcapPath',
       valueType: 'textarea',
     },

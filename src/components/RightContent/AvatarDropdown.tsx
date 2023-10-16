@@ -1,6 +1,7 @@
 import { outLogin } from '@/services/ant-design-pro/api';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
+// @ts-ignore
 import { history, useModel } from '@umijs/max';
 import { Spin } from 'antd';
 import { stringify } from 'querystring';

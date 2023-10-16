@@ -1,5 +1,4 @@
 // @ts-ignore
-/* eslint-disable */
 import { request } from '@umijs/max';
 
 // 获取任务列表
@@ -18,13 +17,9 @@ export async function addTask(body: API_Task.taskListItemAdd, options?: { [key: 
   let params = new FormData();
   params.append('taskId', body.taskId)
   params.append('createTime', body.createTime);
-  params.append('mode', body.mode);
-  params.append('model', body.model)
-
-  if (body.port) {
-    params.append('port', body.port);
-  }
-  params.append('status', body.status);
+  params.append('model', body.mode.toString());
+  params.append('model', body.model.toString())
+  params.append('status', body.status.toString());
   params.append('pcapFile', body.pcap_file);
   return request<API_Task.taskListItemAdd>('/myapi/task/createTask', {
     method: 'POST',
@@ -33,22 +28,6 @@ export async function addTask(body: API_Task.taskListItemAdd, options?: { [key: 
   });
 }
 
-// 更新任务信息
-export async function updateTask(body: API_Task.taskListItemUpdate, options?: { [key: string]: any }) {
-  let params = new FormData();
-  params.append('taskId', body.taskId)
-  params.append('mode', body.mode);
-  params.append('model', body.model)
-  if (body.port) {
-    params.append('port', body.port);
-  }
-  params.append('pcapFile', body.pcapFile);
-  return request<API_Task.taskListItemUpdate>('/myapi/task/updateTask', {
-    method: 'POST',
-    data: params,
-    ...(options || {}),
-  });
-}
 
 // 删除任务
 export async function removeTask(body: API_Task.taskListItemKeys, options?: { [key: string]: any }) {

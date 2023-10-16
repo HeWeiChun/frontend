@@ -9,7 +9,6 @@ import React from 'react';
 export type AddFormValueType = {
     mode: number;
     model: number;
-    // port?: number;
     status: number;
     pcapFile: File[];
 };
@@ -67,26 +66,6 @@ const AddForm: React.FC<AddFormProps> = (props) => {
                         initialValue={0}
                         hidden
                     />
-                    {/*<ProFormRadio.Group*/}
-                    {/*  name="mode"*/}
-                    {/*  label="任务类型"*/}
-                    {/*  options={[*/}
-                    {/*    {*/}
-                    {/*      label: '离线',*/}
-                    {/*      value: 0,*/}
-                    {/*    },*/}
-                    {/*    {*/}
-                    {/*      label: '在线',*/}
-                    {/*      value: 1,*/}
-                    {/*    },*/}
-                    {/*  ]}*/}
-                    {/*  rules={[*/}
-                    {/*    {*/}
-                    {/*      required: true,*/}
-                    {/*      message: "请选择任务类型"*/}
-                    {/*    },*/}
-                    {/*  ]}*/}
-                    {/*/>*/}
                     <ProFormUploadButton
                         label="上传流量文件"
                         name="pcapFile"

@@ -13,19 +13,10 @@ export default defineConfig({
    */
   hash: true,
   /**
-   * @name 兼容性设置
-   * @description 设置 ie11 不一定完美兼容，需要检查自己使用的所有依赖
-   * @doc https://umijs.org/docs/api/config#targets
-   */
-  // targets: {
-  //   ie: 11,
-  // },
-  /**
    * @name 路由的配置，不在路由中引入的文件不会编译
    * @description 只支持 path，component，routes，redirect，wrappers，title 的配置
    * @doc https://umijs.org/docs/guides/routes
    */
-  // umi routes: https://umijs.org/docs/routing
   routes,
   /**
    * @name 主题的配置
@@ -121,25 +112,6 @@ export default defineConfig({
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
-  /**
-   * @name openAPI 插件的配置
-   * @description 基于 openapi 的规范生成serve 和mock，能减少很多样板代码
-   * @doc https://pro.ant.design/zh-cn/docs/openapi/
-   */
-  openAPI: [
-    {
-      requestLibPath: "import { request } from '@umijs/max'",
-      // 或者使用在线的版本
-      // schemaPath: "https://gw.alipayobjects.com/os/antfincdn/M%24jrzTTYJN/oneapi.json"
-      schemaPath: join(__dirname, 'oneapi.json'),
-      mock: false,
-    },
-    {
-      requestLibPath: "import { request } from '@umijs/max'",
-      schemaPath: 'https://gw.alipayobjects.com/os/antfincdn/CA1dOm%2631B/openapi.json',
-      projectName: 'swagger',
-    },
-  ],
   mfsu: {
     strategy: 'normal',
   },
