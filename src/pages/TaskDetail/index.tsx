@@ -7,7 +7,7 @@ import {
   ProColumns,
 } from '@ant-design/pro-components';
 import {task, flowByTask,packetByueid, abstractById} from './service';
-import PageLoading from "@/pages/TaskDetail/components/PageLoading";
+import PageLoading from "@/pages/OurCharts/components/PageLoading";
 import IntroduceRow from "@/pages/TaskDetail/components/IntroduceRow";
 
 

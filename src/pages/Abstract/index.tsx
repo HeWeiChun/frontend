@@ -8,7 +8,7 @@ import TopSearch from './components/TopSearch';
 import ProportionSales from './components/ProportionSales';
 
 import {abstractData} from './service';
-import PageLoading from './components/PageLoading';
+import PageLoading from '@/pages/OurCharts/components/PageLoading';
 
 type SalesType = 'all' | 'offline' | 'online';
 

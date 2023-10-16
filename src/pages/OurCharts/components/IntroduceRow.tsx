@@ -1,7 +1,7 @@
 import {TinyArea, TinyColumn, Progress} from '@ant-design/plots';
 import {Col, Row} from 'antd';
 
-import {ChartCard, Field} from '@/pages/OurCharts/components/Charts';
+import {ChartCard, Field} from './Charts';
 import styles from '../style.less';
 
 const topColResponsiveProps = {

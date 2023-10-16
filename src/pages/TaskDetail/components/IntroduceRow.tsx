@@ -1,7 +1,7 @@
 import {Progress} from '@ant-design/plots';
 import {Col, Row} from 'antd';
 
-import {ChartCard, Field} from './Charts';
+import {ChartCard, Field} from '../../OurCharts/components/Charts';
 import styles from '../style.less';
 
 const topColResponsiveProps = {
