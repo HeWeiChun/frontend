@@ -15,11 +15,11 @@ export async function task(params: API_Task.taskParams, options?: { [key: string
 // 添加任务
 export async function addTask(body: API_Task.taskListItemAdd, options?: { [key: string]: any }) {
   let params = new FormData();
-  params.append('taskId', body.taskId)
-  params.append('createTime', body.createTime);
-  params.append('model', body.mode.toString());
-  params.append('model', body.model.toString())
-  params.append('status', body.status.toString());
+  params.append('taskId', body.task_id)
+  params.append('createTime', body.create_time)
+  params.append('mode', body.mode);
+  params.append('model', body.model)
+  params.append('status', body.status);
   params.append('pcapFile', body.pcap_file);
   return request<API_Task.taskListItemAdd>('/myapi/task/createTask', {
     method: 'POST',
@@ -49,6 +49,19 @@ export async function startTask(body: API_Task.taskListItemKeys, options?: { [ke
     params.append('taskId', taskId);
   });
   return request<Record<string, any>>('/myapi/task/startTask', {
+    method: 'POST',
+    data: params,
+    ...(options || {}),
+  });
+}
+
+// 停止任务
+export async function stopTask(body: API_Task.taskListItemKeys, options?: { [key: string]: any }) {
+  let params = new FormData();
+  body.taskIds.forEach((taskId) => {
+    params.append('taskId', taskId);
+  });
+  return request<Record<string, any>>('/myapi/task/stopTask', {
     method: 'POST',
     data: params,
     ...(options || {}),

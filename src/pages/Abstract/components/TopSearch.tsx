@@ -5,17 +5,17 @@ import React from 'react';
 const columns = [
   {
     title: '异常流',
-    dataIndex: 'flowId',
+    dataIndex: 'flow_id',
     valueType: 'textarea',
   },
   {
     title: '归属任务',
-    dataIndex: 'taskID',
+    dataIndex: 'task_id',
     valueType: 'textarea',
   },
   {
     title: '异常时间',
-    dataIndex: 'latestTime',
+    dataIndex: 'latest_time',
     valueType: 'dateTime',
   },
 ];

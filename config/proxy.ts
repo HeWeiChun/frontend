@@ -13,7 +13,7 @@ export default {
   // 如果需要自定义本地开发服务器  请取消注释按需调整
   dev: {
     '/myapi/': {
-      target: 'http://localhost:9300',
+      target: 'http://localhost:9400',
       changeOrigin: true,
       pathRewrite: { '^/myapi' : '/api' },
     },

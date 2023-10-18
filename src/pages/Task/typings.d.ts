@@ -12,12 +12,12 @@ declare namespace API_Task {
 
   // 获取所有任务
   type taskListItem = {
-    taskId: string;
-    createTime: string;
-    startTime?: string;
-    endTime?: string;
+    task_id: string;
+    create_time: string;
+    start_time?: string;
+    end_time?: string;
     mode: number;
-    pcapPath?: string;
+    pcap_path?: string;
     normal?: number;
     abnormal?: number;
     total?: number;
@@ -27,8 +27,8 @@ declare namespace API_Task {
 
   // 添加任务
   type taskListItemAdd = {
-    taskId: string;
-    createTime: string;
+    task_id: string;
+    create_time: string;
     mode: number;
     status: number;
     model: number;

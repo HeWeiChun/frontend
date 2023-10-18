@@ -12,20 +12,20 @@ declare namespace API_Detail {
 
   // 获取所有数据包
   type packetListItem = {
-    ngapType: string;
-    ngapProcedureCode: string;
-    ranUeNgapId:number;
-    packetLen: number;
-    arriveTimeUs: number;
-    arriveTime: string;
-    timeInterval: number;
-    verificationTag: number;
-    srcIP: string;
-    dstIP: string;
-    dirSeq: number;
-    flowUEID: string;
-    flowTimeID: string;
-    statusPacket: number;
+    ngap_type: string;
+    ngap_procedure_code: string;
+    ran_ue_ngap_id:number;
+    packet_len: number;
+    arrive_time_us: number;
+    arrive_time: string;
+    time_interval: number;
+    verification_tag: number;
+    src_ip: string;
+    dst_ip: string;
+    dir_seq: number;
+    flow_ue_id: string;
+    flow_time_id: string;
+    status_packet: number;
   }
 
   type ueFlowList = {
@@ -34,27 +34,33 @@ declare namespace API_Detail {
     success?: boolean;
   }
 
-  // 获取所有数据包
+  // 获取所有流
   type ueFlowListItem = {
-    flowId: string;
-    ranUeNgapId: number;
-    totalNum: number;
-    startSecond: number;
-    endSecond: number;
-    beginTime: string;
-    lastTime: string;
-    verificationTag: number;
-    srcIP: string;
-    dstIP: string;
-    statusFlow: number;
-    taskID: string;
+    flow_id: string;
+    ran_ue_ngap_id: number;
+    total_num: number;
+    start_second: number;
+    end_second: number;
+    begin_time: string;
+    last_time: string;
+    verification_tag: number;
+    src_ip: string;
+    dst_ip: string;
+    status_flow: number;
+    task_id: string;
   }
   // 获取特定流的所有包
   type packetListByFlow = {
     FlowId: string;
+    Model: number;
   }
   // 获取特定任务的所有流
   type flowListByTask = {
+    TaskID: string;
+    Model: number;
+  }
+  // 获取特点任务的摘要
+  type abstractByTask = {
     TaskID: string;
   }
   // 介绍栏
